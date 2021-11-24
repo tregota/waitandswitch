@@ -1,0 +1,18 @@
+{
+    "title": {
+      "en": "Or cancel"
+    },
+    "titleFormatted": {
+      "en": "Or cancel [[id]]"
+    },
+    "hint": {
+      "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" and returns false."
+    },
+    "args": [
+      {
+        "type": "autocomplete",
+        "name": "id",
+        "title": { "en": "Delay ID" }
+      }
+    ]
+  }

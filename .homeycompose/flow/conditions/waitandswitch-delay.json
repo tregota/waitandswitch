@@ -1,0 +1,29 @@
+{
+    "title": {
+      "en": "Delay !{{true|false}}"
+    },
+    "titleFormatted": {
+      "en": "Delay !{{true|false}} for [[seconds]] seconds, [[id]]"
+    },
+    "hint": {
+      "en": "Must be placed last in the first conditions group and be paired with one of the \"Or\" cards."
+    },
+    "args": [
+      {
+        "title": "Seconds",
+        "type": "number",
+        "name": "seconds",
+        "placeholder": {
+          "en": "Seconds"
+        },
+        "min": 0.001,
+        "max": 86400,
+        "step": 0.001
+      },
+      {
+        "type": "autocomplete",
+        "name": "id",
+        "title": { "en": "ID" }
+      }
+    ]
+  }

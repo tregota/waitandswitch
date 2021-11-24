@@ -1,0 +1,121 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "se.tregota.waitandswitch",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Wait and Switch"
+  },
+  "brandColor": "#0abfa2",
+  "description": {
+    "en": "Enables flipping between two states with delays to make sure conditions are stable"
+  },
+  "category": [
+    "tools"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png"
+  },
+  "author": {
+    "name": "Henrik Berg",
+    "email": "dev@tregota.se"
+  },
+  "bugs": {
+    "url": "https://github.com/tregota/waitandswitch/issues"
+  },
+  "flow": {
+    "conditions": [
+      {
+        "title": {
+          "en": "Delay !{{true|false}}"
+        },
+        "titleFormatted": {
+          "en": "Delay !{{true|false}} for [[seconds]] seconds, [[id]]"
+        },
+        "hint": {
+          "en": "Must be placed last in the first conditions group and be paired with one of the \"Or\" cards."
+        },
+        "args": [
+          {
+            "title": "Seconds",
+            "type": "number",
+            "name": "seconds",
+            "placeholder": {
+              "en": "Seconds"
+            },
+            "min": 0.001,
+            "max": 86400,
+            "step": 0.001
+          },
+          {
+            "type": "autocomplete",
+            "name": "id",
+            "title": {
+              "en": "ID"
+            }
+          }
+        ],
+        "id": "waitandswitch-delay"
+      },
+      {
+        "title": {
+          "en": "Or cancel"
+        },
+        "titleFormatted": {
+          "en": "Or cancel [[id]]"
+        },
+        "hint": {
+          "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" and returns false."
+        },
+        "args": [
+          {
+            "type": "autocomplete",
+            "name": "id",
+            "title": {
+              "en": "Delay ID"
+            }
+          }
+        ],
+        "id": "waitandswitch-orcancel"
+      },
+      {
+        "title": {
+          "en": "Or delay !{{false|true}}"
+        },
+        "titleFormatted": {
+          "en": "Or delay !{{false|true}} for [[seconds]] seconds, [[id]]"
+        },
+        "hint": {
+          "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or delays before returning false."
+        },
+        "args": [
+          {
+            "title": "Seconds",
+            "type": "number",
+            "name": "seconds",
+            "placeholder": {
+              "en": "Seconds"
+            },
+            "min": 0.001,
+            "max": 86400,
+            "step": 0.001
+          },
+          {
+            "type": "autocomplete",
+            "name": "id",
+            "title": {
+              "en": "Delay ID"
+            }
+          }
+        ],
+        "id": "waitandswitch-ordelay"
+      }
+    ]
+  }
+}

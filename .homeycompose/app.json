@@ -1,0 +1,31 @@
+{
+  "id": "se.tregota.waitandswitch",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Wait and Switch"
+  },
+  "brandColor": "#0abfa2",
+  "description": {
+    "en": "Enables flipping between two states with delays to make sure conditions are stable"
+  },
+  "category": [
+    "tools"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png"
+  },
+  "author": {
+    "name": "Henrik Berg",
+    "email": "dev@tregota.se"
+  },
+  "bugs": {
+    "url": "https://github.com/tregota/waitandswitch/issues"
+  }
+}
