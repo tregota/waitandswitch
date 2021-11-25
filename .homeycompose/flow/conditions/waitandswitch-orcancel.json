@@ -1,12 +1,12 @@
 {
     "title": {
-      "en": "Or cancel"
+      "en": "Or !{{cancel|cancel*}}"
     },
     "titleFormatted": {
-      "en": "Or cancel [[id]]"
+      "en": "Or !{{cancel|cancel*}} [[id]]"
     },
     "hint": {
-      "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" and returns false."
+      "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or sets state to false and returns false."
     },
     "args": [
       {

@@ -1,12 +1,12 @@
 {
     "title": {
-      "en": "Or delay !{{false|true}}"
+      "en": "Or delay !{{false|true*}}"
     },
     "titleFormatted": {
-      "en": "Or delay !{{false|true}} for [[seconds]] seconds, [[id]]"
+      "en": "Or delay !{{false|true*}} for [[seconds]] seconds, [[id]]"
     },
     "hint": {
-      "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or delays before returning false."
+      "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or delays false if state is true."
     },
     "args": [
       {
