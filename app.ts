@@ -1,5 +1,4 @@
 import Homey from 'homey';
-import { ArgumentAutocompleteResults } from 'homey/lib/FlowCard';
 
 type Timeout = {
   state?: boolean,
@@ -41,10 +40,10 @@ class WaitAndSwitchApp extends Homey.App {
   }
 
   /**
-   * When an 'Or delay/cancel' card cancels a previous waiting 'Delay' card, that previous flow will end up at its 'Or' card too. 
-   *   both will however be happy with how things are and abort. except cancel returns false when it is happy.
-   * When a 'Delay' card cancels an 'Or Delay' card it can directly reject it since it shouldn't have more conditions
-   * But when a 'Delay' card then is happy with the current state and wants to abort, it will have be increase orSkipOvers first 
+   * When a 'Or delay/cancel' card cancels a previous waiting 'Delay' card, that previous flow will end up at its 'Or' card too. 
+   *   both will however be happy with how things are and abort.
+   * When a 'Delay' card cancels a 'Or Delay' card it can directly abort it since that flow shouldn't have more conditions.
+   * But when a 'Delay' card is happy with the current state and wants to abort, it will have be increase orSkipOvers first 
    *   since a following 'Or' card otherwise would have tried to change the current state
    * @param {number} seconds 
    * @param {string} id 
@@ -52,7 +51,17 @@ class WaitAndSwitchApp extends Homey.App {
    * @returns 
    */
    async conditionRunListener(id: string, wantedState?: boolean, seconds?: number) {
+    if (seconds && seconds > 89) {
+      throw new Error('You cannot use a delay longer than 89 seconds');
+    }
+
     const timeout = this.timeouts[id];
+    let cancel = false;
+    if (wantedState === undefined || (wantedState === false && seconds === 0)) {
+      cancel = true;
+      wantedState = false;
+    }
+
     if (timeout) {
       if (wantedState !== true && timeout.orSkipOvers > 0) {
         // if this is an "Or"-card and orSkipOvers is above zero then decrement and abort
@@ -60,8 +69,8 @@ class WaitAndSwitchApp extends Homey.App {
         throw new Error('Skipped card; flow canceled');
       }
 
-      // if there is an active timeout or if wantedState is already the active state or if this is a cancel, then we should skip, and maybe cancel a timeout
-      if (timeout.timeoutRef || wantedState === timeout.state || wantedState === undefined) {
+      // if there is an active timeout or if wantedState is already the active state, then we should skip, and maybe cancel a timeout
+      if (timeout.timeoutRef || wantedState === timeout.state) {
         // if there is an active timeout and it is doing something we don't want
         if (timeout.timeoutRef && timeout.wantedState !== wantedState) {
           // then we cancel it
@@ -69,27 +78,22 @@ class WaitAndSwitchApp extends Homey.App {
           // and reject it.
           timeout.reject && timeout.reject('Delay canceled');
           // we are now happy since the state will remain as the wanted state
-
-          // cancels canceling a timeout abort so that not there are two flows resulting in false at once
-          if (wantedState === undefined) {
-            throw new Error('Delay canceled');
-          }
         }
-        // we are satisifed with how things are but if we want true then another card in our flow might not be happy and start a new timer, so skip it:
+        // we are satisifed with how things are but if we want true then the "Or" card in our flow will not be happy and start a new timer, so skip it:
         if (wantedState === true) {
           this.timeouts[id].orSkipOvers++;
         }
-        else if (wantedState === undefined) {
-          // cancels not canceling a timeout sets the state to false and return false
-          this.timeouts[id].state = false;
-          return false;
-        }
         throw new Error('Skipped card; same as before');
       }
+
+      // if cancel and state is true then set false and return false
+      if(cancel) {
+        this.timeouts[id].state = false;
+        return false;
+      }
     }
-    else if(wantedState === undefined) {
-      // no timeout to cancel
-      return false;
+    else if(cancel) {
+        throw new Error('Skipped card; no delay to cancel');
     }
 
     this.log(`Delaying resolve ${wantedState} for '${id}' for ${seconds} seconds`);
@@ -141,7 +145,6 @@ class WaitAndSwitchApp extends Homey.App {
    * returns a list of previously generated ids to make it easier for the user
    */
   async getConditionIds(query: string, delayTrueCard: boolean, card: Homey.FlowCardCondition): Promise<any> {
-    let saved: ID_Option[] = [];
     let options: ID_Option[] = [];
 
     // get ids used in all exising "Delay true" cards
@@ -178,7 +181,7 @@ class WaitAndSwitchApp extends Homey.App {
       this.lastID_Query = this.randomId();
       options.push({
         name: this.lastID_Query,
-        description: 'Enter a unique ID for this delay',
+        description: 'You could pick this random ID',
         created: new Date().toLocaleDateString()
       });
     }

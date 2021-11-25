@@ -39,7 +39,7 @@
           "en": "Delay !{{true|false*}} for [[seconds]] seconds, [[id]]"
         },
         "hint": {
-          "en": "Must be placed last in the first conditions group and be paired with one of the \"Or\" cards."
+          "en": "Must be placed last in the first conditions group and be paired with an \"Or\" card."
         },
         "args": [
           {
@@ -47,10 +47,10 @@
             "type": "number",
             "name": "seconds",
             "placeholder": {
-              "en": "Seconds"
+              "en": "0-89"
             },
-            "min": 0.001,
-            "max": 86400,
+            "min": 0,
+            "max": 89,
             "step": 0.001
           },
           {
@@ -58,6 +58,9 @@
             "name": "id",
             "title": {
               "en": "ID"
+            },
+            "placeholder": {
+              "en": "Enter a unique ID"
             }
           }
         ],
@@ -71,7 +74,7 @@
           "en": "Or !{{cancel|cancel*}} [[id]]"
         },
         "hint": {
-          "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or sets state to false and returns false."
+          "en": "Must be placed alone in the second conditions group. Same thing as a \"Delay false\" card with zero delay."
         },
         "args": [
           {
@@ -79,6 +82,9 @@
             "name": "id",
             "title": {
               "en": "Delay ID"
+            },
+            "placeholder": {
+              "en": "Pick the ID as in \"Delay true\""
             }
           }
         ],
@@ -100,10 +106,10 @@
             "type": "number",
             "name": "seconds",
             "placeholder": {
-              "en": "Seconds"
+              "en": "0-89"
             },
-            "min": 0.001,
-            "max": 86400,
+            "min": 0,
+            "max": 89,
             "step": 0.001
           },
           {
@@ -111,6 +117,9 @@
             "name": "id",
             "title": {
               "en": "Delay ID"
+            },
+            "placeholder": {
+              "en": "Pick the ID as in \"Delay true\""
             }
           }
         ],

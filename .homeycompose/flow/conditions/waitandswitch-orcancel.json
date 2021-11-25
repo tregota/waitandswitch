@@ -6,13 +6,16 @@
       "en": "Or !{{cancel|cancel*}} [[id]]"
     },
     "hint": {
-      "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or sets state to false and returns false."
+      "en": "Must be placed alone in the second conditions group. Same thing as a \"Delay false\" card with zero delay."
     },
     "args": [
       {
         "type": "autocomplete",
         "name": "id",
-        "title": { "en": "Delay ID" }
+        "title": { "en": "Delay ID" },
+        "placeholder": {
+          "en": "Pick the ID as in \"Delay true\""
+        }
       }
     ]
   }

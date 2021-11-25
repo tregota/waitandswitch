@@ -14,16 +14,19 @@
         "type": "number",
         "name": "seconds",
         "placeholder": {
-          "en": "Seconds"
+          "en": "0-89"
         },
-        "min": 0.001,
-        "max": 86400,
+        "min": 0,
+        "max": 89,
         "step": 0.001
       },
       {
         "type": "autocomplete",
         "name": "id",
-        "title": { "en": "Delay ID" }
+        "title": { "en": "Delay ID" },
+        "placeholder": {
+          "en": "Pick the ID as in \"Delay true\""
+        }
       }
     ]
   }

@@ -6,7 +6,7 @@
       "en": "Delay !{{true|false*}} for [[seconds]] seconds, [[id]]"
     },
     "hint": {
-      "en": "Must be placed last in the first conditions group and be paired with one of the \"Or\" cards."
+      "en": "Must be placed last in the first conditions group and be paired with an \"Or\" card."
     },
     "args": [
       {
@@ -14,16 +14,19 @@
         "type": "number",
         "name": "seconds",
         "placeholder": {
-          "en": "Seconds"
+          "en": "0-89"
         },
-        "min": 0.001,
-        "max": 86400,
+        "min": 0,
+        "max": 89,
         "step": 0.001
       },
       {
         "type": "autocomplete",
         "name": "id",
-        "title": { "en": "ID" }
+        "title": { "en": "ID" },
+        "placeholder": {
+          "en": "Enter a unique ID"
+        }
       }
     ]
   }
