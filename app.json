@@ -33,10 +33,10 @@
     "conditions": [
       {
         "title": {
-          "en": "Delay !{{true|false}}"
+          "en": "Delay !{{true|false*}}"
         },
         "titleFormatted": {
-          "en": "Delay !{{true|false}} for [[seconds]] seconds, [[id]]"
+          "en": "Delay !{{true|false*}} for [[seconds]] seconds, [[id]]"
         },
         "hint": {
           "en": "Must be placed last in the first conditions group and be paired with one of the \"Or\" cards."
@@ -65,13 +65,13 @@
       },
       {
         "title": {
-          "en": "Or cancel"
+          "en": "Or !{{cancel|cancel*}}"
         },
         "titleFormatted": {
-          "en": "Or cancel [[id]]"
+          "en": "Or !{{cancel|cancel*}} [[id]]"
         },
         "hint": {
-          "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" and returns false."
+          "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or sets state to false and returns false."
         },
         "args": [
           {
@@ -86,13 +86,13 @@
       },
       {
         "title": {
-          "en": "Or delay !{{false|true}}"
+          "en": "Or delay !{{false|true*}}"
         },
         "titleFormatted": {
-          "en": "Or delay !{{false|true}} for [[seconds]] seconds, [[id]]"
+          "en": "Or delay !{{false|true*}} for [[seconds]] seconds, [[id]]"
         },
         "hint": {
-          "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or delays before returning false."
+          "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or delays false if state is true."
         },
         "args": [
           {

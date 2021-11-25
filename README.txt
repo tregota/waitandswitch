@@ -1,6 +1,6 @@
 Enables flipping between two states with delays to make sure conditions are stable.
 
-Place a "Delay true" condition card after all other conditions and an "Or delay false" card (or an "Or cancel" card) alone below the "or" line.
+Place a "Delay true" condition card after all other conditions and a "Or delay false" card (or a "Or cancel" card) alone below the "or" line.
 There are no other way of building flows with these cards. They assume this order is used. If you reorder or invert them, the flow will become completely unpredictable.
 
 After a "Delay true" has run it's course it will execute the "Then" section and afterwards won't do it again until the state is changed by an opposing card.
