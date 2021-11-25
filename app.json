@@ -33,13 +33,13 @@
     "conditions": [
       {
         "title": {
-          "en": "Delay !{{true|false*}}"
+          "en": "Delay !{{true|false* (this will not work right)}}"
         },
         "titleFormatted": {
-          "en": "Delay !{{true|false*}} for [[seconds]] seconds, [[id]]"
+          "en": "Delay !{{true|false* (this will not work right)}} [[seconds]] seconds, [[id]]"
         },
         "hint": {
-          "en": "Must be placed last in the first conditions group and be paired with an \"Or\" card."
+          "en": "Must be placed last in the first conditions group. There must also be an opposing \"Or\" card below the \"or\" line. Don't invert."
         },
         "args": [
           {
@@ -84,7 +84,7 @@
               "en": "Delay ID"
             },
             "placeholder": {
-              "en": "Pick the ID as in \"Delay true\""
+              "en": "Pick the ID from \"Delay true\""
             }
           }
         ],
@@ -95,7 +95,7 @@
           "en": "Or delay !{{false|true*}}"
         },
         "titleFormatted": {
-          "en": "Or delay !{{false|true*}} for [[seconds]] seconds, [[id]]"
+          "en": "Or delay !{{false|true*}} [[seconds]] seconds, [[id]]"
         },
         "hint": {
           "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or delays false if state is true."
@@ -119,7 +119,7 @@
               "en": "Delay ID"
             },
             "placeholder": {
-              "en": "Pick the ID as in \"Delay true\""
+              "en": "Pick the ID from \"Delay true\""
             }
           }
         ],

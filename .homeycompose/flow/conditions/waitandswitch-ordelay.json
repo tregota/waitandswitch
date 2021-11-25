@@ -3,7 +3,7 @@
       "en": "Or delay !{{false|true*}}"
     },
     "titleFormatted": {
-      "en": "Or delay !{{false|true*}} for [[seconds]] seconds, [[id]]"
+      "en": "Or delay !{{false|true*}} [[seconds]] seconds, [[id]]"
     },
     "hint": {
       "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or delays false if state is true."
@@ -25,7 +25,7 @@
         "name": "id",
         "title": { "en": "Delay ID" },
         "placeholder": {
-          "en": "Pick the ID as in \"Delay true\""
+          "en": "Pick the ID from \"Delay true\""
         }
       }
     ]

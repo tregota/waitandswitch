@@ -6,7 +6,7 @@
       "en": "Or !{{cancel|cancel*}} [[id]]"
     },
     "hint": {
-      "en": "Must be placed alone in the second conditions group. Same thing as a \"Delay false\" card with zero delay."
+      "en": "Must be placed alone in the second conditions group. Same thing as a \"Or delay false\" card with zero delay."
     },
     "args": [
       {
@@ -14,7 +14,7 @@
         "name": "id",
         "title": { "en": "Delay ID" },
         "placeholder": {
-          "en": "Pick the ID as in \"Delay true\""
+          "en": "Pick the ID from \"Delay true\""
         }
       }
     ]
