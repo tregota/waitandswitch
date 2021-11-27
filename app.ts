@@ -155,7 +155,7 @@ class WaitAndSwitchApp extends Homey.App {
       this.lastID_Query = this.randomId();
       options.push({
         name: this.lastID_Query,
-        description: 'entered ID already exists',
+        description: 'Entered ID already exists',
         created: new Date().toLocaleDateString()
       });
     }
@@ -166,14 +166,14 @@ class WaitAndSwitchApp extends Homey.App {
       }
       options.push({
         name: query,
-        description: 'click to confirm ID',
+        description: 'Click to confirm ID',
         created: new Date().toLocaleDateString()
       });
     }
     else if (!delayTrueCard && this.lastID_Query) {
       options.push({
         name: this.lastID_Query,
-        description: 'last entered ID',
+        description: 'Last entered ID',
         created: new Date().toLocaleDateString()
       });
     }
@@ -181,7 +181,7 @@ class WaitAndSwitchApp extends Homey.App {
       this.lastID_Query = this.randomId();
       options.push({
         name: this.lastID_Query,
-        description: 'You could pick this random ID',
+        description: 'Random ID',
         created: new Date().toLocaleDateString()
       });
     }
@@ -190,7 +190,7 @@ class WaitAndSwitchApp extends Homey.App {
       const oldIDs = query ? Object.values(savedArgs).filter((id) => id.name.includes(query) && id.name !== query) : Object.values(savedArgs);
       options.push(...oldIDs.map((s) => ({
         ...s,
-        description: `created ${s.created}`
+        description: `Created ${s.created}`
       })));
     }
 
