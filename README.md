@@ -1,5 +1,6 @@
 # Wait and Switch
-A Homey app that enables flipping between two states with delays to make sure conditions are stable.
+Place these delay cards after a set of conditions to make sure they stay true before performing any action.
+This can be used to turn something both on and off with a delay.
 
 ![logo](https://raw.githubusercontent.com/tregota/waitandswitch/main/assets/images/large.png)
 
@@ -10,8 +11,6 @@ Maximum delay before Homey kills the flow is 89 seconds.
 
 After a "Delay true" has run it's course it will execute the "Then" section and afterwards won't do it again until the state is changed by an opposing card.
 While "Or delay false" follows the same logic but in reverse, "Or cancel" changes the state immediatly and returns false, if state is true.
-
-This can be used to turn something both on and off with a delay.
 
 Examples:   
 - If the TV power usage is greater than 25W "Then" turn Subwoofer on after 5 seconds, "else" turn Subwoofer off after 5 seconds.

@@ -6,7 +6,7 @@
       "en": "Or delay !{{false|true*}} [[seconds]] seconds, [[id]]"
     },
     "hint": {
-      "en": "Must be placed alone in the second conditions group. Cancels \"Delay true\" or delays false if state is true."
+      "en": "Must be placed alone below the \"or\" line. Cancels \"Delay true\" or delays false if state is true."
     },
     "args": [
       {

@@ -6,7 +6,7 @@
       "en": "Or !{{cancel|cancel*}} [[id]]"
     },
     "hint": {
-      "en": "Must be placed alone in the second conditions group. Same thing as a \"Or delay false\" card with zero delay."
+      "en": "Must be placed alone below the \"or\" line. Same thing as a \"Or delay false\" card with zero delay."
     },
     "args": [
       {
