@@ -1,18 +1,20 @@
 {
     "title": {
-      "en": "Or !{{cancel|cancel*}}"
+      "en": "!{{Cancel|Inverted cancel}}"
     },
     "titleFormatted": {
-      "en": "Or !{{cancel|cancel*}} [[id]]"
+      "en": "!{{Cancel|Inverted cancel}}[[id]]"
     },
     "hint": {
-      "en": "Must be placed alone below the \"or\" line. Same thing as a \"Or delay false\" card with zero delay."
+      "en": "Cancels existing delay with the same ID or sets state to false and returns false."
     },
     "args": [
       {
+        "title": {
+          "en": "ID"
+        },
         "type": "autocomplete",
         "name": "id",
-        "title": { "en": "Delay ID" },
         "placeholder": {
           "en": "Pick the ID from \"Delay true\""
         }

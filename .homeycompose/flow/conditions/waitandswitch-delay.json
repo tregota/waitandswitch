@@ -1,16 +1,18 @@
 {
     "title": {
-      "en": "Delay !{{true|false* (this will not work right)}}"
+      "en": "Delay true"
     },
     "titleFormatted": {
-      "en": "Delay !{{true|false* (this will not work right)}} [[seconds]] seconds, [[id]]"
+      "en": "Delay!{{ |not }}true[[seconds]]sec,[[id]]"
     },
     "hint": {
-      "en": "Must be placed after all other conditions. With the exception that it must also be followed by an opposing \"Or\" card below the \"or\" line. Don't invert."
+      "en": "Delays true (if state is false) unless interrupted by an opposing card with the same ID."
     },
     "args": [
       {
-        "title": "Seconds",
+        "title": {
+          "en": "Seconds"
+        },
         "type": "number",
         "name": "seconds",
         "placeholder": {
@@ -21,9 +23,11 @@
         "step": 0.001
       },
       {
+        "title": {
+          "en": "ID"
+        },
         "type": "autocomplete",
         "name": "id",
-        "title": { "en": "ID" },
         "placeholder": {
           "en": "Enter a unique ID"
         }

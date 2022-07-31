@@ -1,0 +1,51 @@
+{
+  "title": {
+    "en": "Advanced delay"
+  },
+  "titleFormatted": {
+    "en": "Delay!{{ |not }}[[yesno]][[seconds]]sec,[[id]][[type]]"
+  },
+  "hint": {
+    "en": "Delays Yes/No unless interrupted by an opposing card with the same ID. Can be set to be stateless to allow repeats."
+  },
+  "args": [
+    {
+      "title": {
+        "en": "Yes/No"
+      },
+      "type": "checkbox",
+      "name": "yesno"
+    },
+    {
+      "title": "Seconds",
+      "type": "number",
+      "name": "seconds",
+      "placeholder": {
+        "en": "0-89"
+      },
+      "min": 0,
+      "max": 89,
+      "step": 0.001
+    },
+    {
+      "title": {
+        "en": "ID"
+      },
+      "type": "autocomplete",
+      "name": "id",
+      "placeholder": {
+        "en": "Enter a delay ID"
+      }
+    },
+    {
+      "title": "...",
+      "type": "dropdown",
+      "name": "type",
+      "required": false,
+      "values": [
+        { "id": "standard", "label": { "en": "Standard" } },
+        { "id": "stateless", "label": { "en": "Stateless" } }
+      ]
+    }
+  ]
+}

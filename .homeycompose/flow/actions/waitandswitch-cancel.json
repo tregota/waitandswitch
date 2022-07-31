@@ -1,0 +1,23 @@
+{
+  "title": {
+    "en": "Cancel"
+  },
+  "titleFormatted": {
+    "en": "Cancel[[id]]"
+  },
+  "hint": {
+    "en": "Cancels existing delay with the same ID or sets state to false."
+  },
+  "args": [
+    {
+      "title": {
+        "en": "ID"
+      },
+      "type": "autocomplete",
+      "name": "id",
+      "placeholder": {
+        "en": "Pick the ID from \"Delay true\""
+      }
+    }
+  ]
+}
