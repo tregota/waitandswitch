@@ -3,10 +3,10 @@
     "en": "Advanced delay"
   },
   "titleFormatted": {
-    "en": "Delay!{{ |not }}[[yesno]][[seconds]]sec,[[id]][[type]]"
+    "en": "Delay[[yesno]][[seconds]]sec,[[id]]"
   },
   "hint": {
-    "en": "Delays Yes/No unless interrupted by an opposing card with the same ID. Can be set to be stateless to allow repeats."
+    "en": "Delays unless interrupted by an opposing card with the same ID."
   },
   "args": [
     {
@@ -34,18 +34,8 @@
       "type": "autocomplete",
       "name": "id",
       "placeholder": {
-        "en": "Enter a delay ID"
+        "en": "Enter delay ID"
       }
-    },
-    {
-      "title": "...",
-      "type": "dropdown",
-      "name": "type",
-      "required": false,
-      "values": [
-        { "id": "standard", "label": { "en": "Standard" } },
-        { "id": "stateless", "label": { "en": "Stateless" } }
-      ]
     }
   ]
 }

@@ -1,14 +1,21 @@
 {
   "title": {
-    "en": "Delay"
+    "en": "Delay for advanced flows"
   },
   "titleFormatted": {
-    "en": "Delay[[seconds]]sec,[[id]][[type]]"
+    "en": "Delay[[yesno]][[seconds]]sec,[[id]]"
   },
   "hint": {
-    "en": "Delays unless interrupted by an opposing card with the same ID. Can be set to be stateless to allow repeats. Only useful in advanced flows."
+    "en": "Delays Yes/No unless interrupted by a cancel card with the same ID. Only works in advanced flows."
   },
   "args": [
+    {
+      "title": {
+        "en": "Yes/No"
+      },
+      "type": "checkbox",
+      "name": "yesno"
+    },
     {
       "title": "Seconds",
       "type": "number",
@@ -27,18 +34,8 @@
       "type": "autocomplete",
       "name": "id",
       "placeholder": {
-        "en": "Enter a delay ID"
+        "en": "Enter delay ID"
       }
-    },
-    {
-      "title": "...",
-      "type": "dropdown",
-      "name": "type",
-      "required": false,
-      "values": [
-        { "id": "standard", "label": { "en": "Standard" } },
-        { "id": "stateless", "label": { "en": "Stateless" } }
-      ]
     }
   ]
 }

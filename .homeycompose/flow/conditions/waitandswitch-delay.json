@@ -29,7 +29,7 @@
         "type": "autocomplete",
         "name": "id",
         "placeholder": {
-          "en": "Enter a unique ID"
+          "en": "Enter delay ID"
         }
       }
     ]

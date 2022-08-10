@@ -6,7 +6,7 @@
       "en": "!{{Cancel|Inverted cancel}}[[id]]"
     },
     "hint": {
-      "en": "Cancels existing delay with the same ID or sets state to false and returns false."
+      "en": "Cancels existing delay with the same ID or unsets state and returns false."
     },
     "args": [
       {
@@ -16,7 +16,7 @@
         "type": "autocomplete",
         "name": "id",
         "placeholder": {
-          "en": "Pick the ID from \"Delay true\""
+          "en": "Enter existing delay ID"
         }
       }
     ]

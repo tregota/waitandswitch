@@ -1,12 +1,9 @@
 {
   "title": {
-    "en": "Cancel"
+    "en": "State changed"
   },
   "titleFormatted": {
-    "en": "Cancel[[id]]"
-  },
-  "hint": {
-    "en": "Cancels existing delay with the same ID or unsets state."
+    "en": "[[id]]state changed"
   },
   "args": [
     {
@@ -17,6 +14,15 @@
       "name": "id",
       "placeholder": {
         "en": "Enter existing delay ID"
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "type": "boolean",
+      "name": "state",
+      "title": {
+        "en": "State"
       }
     }
   ]

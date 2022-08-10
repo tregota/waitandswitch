@@ -30,16 +30,78 @@
     "url": "https://github.com/tregota/waitandswitch/issues"
   },
   "flow": {
+    "triggers": [
+      {
+        "title": {
+          "en": "Delay started"
+        },
+        "titleFormatted": {
+          "en": "[[id]]delay started"
+        },
+        "args": [
+          {
+            "title": {
+              "en": "ID"
+            },
+            "type": "autocomplete",
+            "name": "id",
+            "placeholder": {
+              "en": "Enter existing delay ID"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "type": "number",
+            "name": "seconds",
+            "title": {
+              "en": "Seconds"
+            }
+          }
+        ],
+        "id": "waitandswitch-delaystart"
+      },
+      {
+        "title": {
+          "en": "State changed"
+        },
+        "titleFormatted": {
+          "en": "[[id]]state changed"
+        },
+        "args": [
+          {
+            "title": {
+              "en": "ID"
+            },
+            "type": "autocomplete",
+            "name": "id",
+            "placeholder": {
+              "en": "Enter existing delay ID"
+            }
+          }
+        ],
+        "tokens": [
+          {
+            "type": "boolean",
+            "name": "state",
+            "title": {
+              "en": "State"
+            }
+          }
+        ],
+        "id": "waitandswitch-statechange"
+      }
+    ],
     "conditions": [
       {
         "title": {
           "en": "Advanced delay"
         },
         "titleFormatted": {
-          "en": "Delay!{{ |not }}[[yesno]][[seconds]]sec,[[id]][[type]]"
+          "en": "Delay[[yesno]][[seconds]]sec,[[id]]"
         },
         "hint": {
-          "en": "Delays Yes/No unless interrupted by an opposing card with the same ID. Can be set to be stateless to allow repeats."
+          "en": "Delays unless interrupted by an opposing card with the same ID."
         },
         "args": [
           {
@@ -67,28 +129,8 @@
             "type": "autocomplete",
             "name": "id",
             "placeholder": {
-              "en": "Enter a delay ID"
+              "en": "Enter delay ID"
             }
-          },
-          {
-            "title": "...",
-            "type": "dropdown",
-            "name": "type",
-            "required": false,
-            "values": [
-              {
-                "id": "standard",
-                "label": {
-                  "en": "Standard"
-                }
-              },
-              {
-                "id": "stateless",
-                "label": {
-                  "en": "Stateless"
-                }
-              }
-            ]
           }
         ],
         "id": "waitandswitch-advanceddelay"
@@ -124,7 +166,7 @@
             "type": "autocomplete",
             "name": "id",
             "placeholder": {
-              "en": "Enter a unique ID"
+              "en": "Enter delay ID"
             }
           }
         ],
@@ -138,7 +180,7 @@
           "en": "!{{Cancel|Inverted cancel}}[[id]]"
         },
         "hint": {
-          "en": "Cancels existing delay with the same ID or sets state to false and returns false."
+          "en": "Cancels existing delay with the same ID or unsets state and returns false."
         },
         "args": [
           {
@@ -148,7 +190,7 @@
             "type": "autocomplete",
             "name": "id",
             "placeholder": {
-              "en": "Pick the ID from \"Delay true\""
+              "en": "Enter existing delay ID"
             }
           }
         ],
@@ -185,7 +227,7 @@
             "type": "autocomplete",
             "name": "id",
             "placeholder": {
-              "en": "Pick the ID from \"Delay true\""
+              "en": "Enter delay ID"
             }
           }
         ],
@@ -195,15 +237,22 @@
     "actions": [
       {
         "title": {
-          "en": "Delay"
+          "en": "Delay for advanced flows"
         },
         "titleFormatted": {
-          "en": "Delay[[seconds]]sec,[[id]][[type]]"
+          "en": "Delay[[yesno]][[seconds]]sec,[[id]]"
         },
         "hint": {
-          "en": "Delays unless interrupted by an opposing card with the same ID. Can be set to be stateless to allow repeats. Only useful in advanced flows."
+          "en": "Delays Yes/No unless interrupted by a cancel card with the same ID. Only works in advanced flows."
         },
         "args": [
+          {
+            "title": {
+              "en": "Yes/No"
+            },
+            "type": "checkbox",
+            "name": "yesno"
+          },
           {
             "title": "Seconds",
             "type": "number",
@@ -222,28 +271,8 @@
             "type": "autocomplete",
             "name": "id",
             "placeholder": {
-              "en": "Enter a delay ID"
+              "en": "Enter delay ID"
             }
-          },
-          {
-            "title": "...",
-            "type": "dropdown",
-            "name": "type",
-            "required": false,
-            "values": [
-              {
-                "id": "standard",
-                "label": {
-                  "en": "Standard"
-                }
-              },
-              {
-                "id": "stateless",
-                "label": {
-                  "en": "Stateless"
-                }
-              }
-            ]
           }
         ],
         "id": "waitandswitch-advanceddelay"
@@ -256,7 +285,7 @@
           "en": "Cancel[[id]]"
         },
         "hint": {
-          "en": "Cancels existing delay with the same ID or sets state to false."
+          "en": "Cancels existing delay with the same ID or unsets state."
         },
         "args": [
           {
@@ -266,7 +295,7 @@
             "type": "autocomplete",
             "name": "id",
             "placeholder": {
-              "en": "Pick the ID from \"Delay true\""
+              "en": "Enter existing delay ID"
             }
           }
         ],
