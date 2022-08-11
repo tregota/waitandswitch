@@ -9,6 +9,6 @@
     "en": "typo"
   },
   "0.9.3": {
-    "en": "Changed internal logic to be more flexible to support advanced flows. Hopefully doesn't break anything for anyone. Added some cards for advanced flows."
+    "en": "Changed internal logic to support advanced flows. Hopefully doesn't break anything for anyone. Added some cards for advanced flows."
   }
 }

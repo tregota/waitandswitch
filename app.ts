@@ -1,5 +1,7 @@
-import { time } from 'console';
 import Homey from 'homey';
+
+let LOGLEVEL = 'info'; //'debug';
+const RUN_MATCH_THRESHOLD = 100;
 
 type Run = {
   id: number,
@@ -32,6 +34,12 @@ class WaitAndSwitchApp extends Homey.App {
   lastID_Random: ID_Option | undefined = undefined;
   delayStartTrigger: Homey.FlowCardTrigger | undefined;
   stateChangeTrigger: Homey.FlowCardTrigger | undefined;
+
+  logAs(logLevel: 'info' | 'debug', logText: string) {
+    if (LOGLEVEL === 'debug' || logLevel === 'info') {
+      this.log(`[${logLevel}] ${logText}`);
+    }
+  }
 
   /**
    * onInit is called when the app is initialized.
@@ -100,10 +108,12 @@ class WaitAndSwitchApp extends Homey.App {
    async conditionRunListener(id: string, flowState: any, wantedState?: boolean, seconds: number = 0, action = false) {
     const timestamp = Date.now();
     const flowStateJson = JSON.stringify(flowState);
+    this.logAs('debug', `[${id}] Run with state ${flowStateJson} wants ${wantedState === undefined ? 'undefined' : wantedState ? 'true' : 'false'}`);
 
     const timeout = this.timeouts[id];
 
     // find current flow run or create new one
+    // match current run by flow state and timestamp, any execution timestamp diff longer than 100ms is considered a new run
     let currentRun: Run | undefined;
     if (timeout?.runs.length > 0) {
       const stillValid = timeout.runs.filter((r) => r.removeafter >= timestamp)
@@ -111,7 +121,7 @@ class WaitAndSwitchApp extends Homey.App {
         timeout.runs = stillValid;
       }
       currentRun = timeout.runs.reduce((matchingRun: Run | undefined, run: Run) => {
-        if (run.flowState !== flowStateJson || timestamp - run.timestamp > 100 || (matchingRun && matchingRun.timestamp > run.timestamp)) {
+        if (run.flowState !== flowStateJson || timestamp - run.timestamp > RUN_MATCH_THRESHOLD || (matchingRun && matchingRun.timestamp > run.timestamp)) {
           return matchingRun;
         }
         return run;
@@ -136,50 +146,61 @@ class WaitAndSwitchApp extends Homey.App {
         timeout.lastRunId = currentRun.id;
       }
     }
-    else if (!action && currentRun.done) {
-      // and abort
-      // this.log(`[${id}] [${currentRun.id}] already done`);
-      throw new Error(`#${currentRun.id} already done`);
+    else {
+      this.logAs('debug', `[${id}] [${currentRun.id}] Found matching run with ${timestamp - currentRun.timestamp}ms diff, threshold: ${RUN_MATCH_THRESHOLD}ms`);
+      if (!action && currentRun.done) {
+        // and abort
+        this.logAs('debug', `[${id}] [${currentRun.id}] Run is done`);
+        throw new Error(`#${currentRun.id} is already done`);
+      }
     }
     
-    // if there is an active timeout or if wantedState is already the active state, then we should skip, and maybe cancel a timeout
-    if (timeout) {
-      if (timeout.timeoutRef || wantedState === timeout.state) {
-        // if there is an active timeout and it is doing something we don't want
-        if (timeout.timeoutRef && timeout.wantedState !== wantedState) {
-          // then we cancel it
-          this.cancelTimeout(id);
+    // if there is an active timeout, to either cancel or leave as is
+    if (timeout?.timeoutRef) {
+      // if there is an active timeout and it is doing something we don't want
+      if (timeout.wantedState !== wantedState) {
+        // then we cancel it
+        this.cancelTimeout(id);
 
-          // and reject it, but make sure when wanted state was true to set its run to done to true for the run. so that, in a standard flow, any following delay false cards doesn't trigger.
-          if (timeout.wantedState === true && timeout.timeoutRun) {
-            timeout.timeoutRun.timestamp = Date.now();
-            timeout.timeoutRun.done = true;
-          }
-          timeout.reject && timeout.reject(`#${timeout.timeoutRun?.id} interrupted by #${currentRun.id}`);
-          this.log(`[${id}] [${currentRun.id}] State change by [${timeout.timeoutRun?.id}] interrupted`);
-
-          // a successful cancel always aborts
-          if(wantedState === undefined) {
-            // when aborted we need to set done to true for the run. so that, in a standard flow, any following delay false cards doesn't trigger.
-            throw new Error(`#${currentRun.id} canceled #${timeout.timeoutRun?.id}`);
-          }
+        // and reject it, but make sure when wanted state was true to set its run to done to true for the run. so that, in a standard flow, any following delay false cards doesn't trigger.
+        if (timeout.wantedState && timeout.timeoutRun) {
+          timeout.timeoutRun.timestamp = Date.now();
+          timeout.timeoutRun.done = true;
         }
+        timeout.reject && timeout.reject(`#${timeout.timeoutRun?.id} interrupted by #${currentRun.id}`);
+        this.logAs('info', `[${id}] [${currentRun.id}] State change by [${timeout.timeoutRun?.id}] interrupted`);
 
-        // when a timer is first created, its state is undefined. so any interrupted timer should result in a new timer
-        if (this.timeouts[id].timeoutRef || (wantedState !== undefined && this.timeouts[id].state !== undefined)) {
-          // when aborted and wanted state is true we need to set done to true for the run. so that, in a standard flow, any following delay false cards doesn't trigger.
-          if (wantedState) {
-            currentRun.timestamp = Date.now();
-            currentRun.done = true;
-          }
-          // this.log(`[${id}] [${currentRun.id}] State ${this.timeouts[id].timeoutRef ? 'already about to be '+(this.timeouts[id].wantedState?'true':'false') : 'already '+(this.timeouts[id].state?'true':'false')}`);
-          throw new Error(`#${currentRun.id} state ${this.timeouts[id].timeoutRef ? 'already about to be '+(this.timeouts[id].wantedState?'true':'false') : 'already '+(this.timeouts[id].state?'true':'false')}`);
+        // a successful cancel always aborts
+        if(wantedState === undefined) {
+          // when aborted we need to set done to true for the run. so that, in a standard flow, any following delay false cards doesn't trigger.
+          throw new Error(`#${currentRun.id} canceled #${timeout.timeoutRun?.id}`);
         }
+      }
+      else {
+        if (wantedState) {
+          // throwing errors in standard flows causes the flow to continue to the next or-field. so set currentRun to done to cause any delay cards there to abort as well.
+          currentRun.timestamp = Date.now();
+          currentRun.done = true;
+        }
+        this.logAs('debug', `[${id}] [${currentRun.id}] State already about to be ${this.timeouts[id].wantedState ? 'true' : 'false'}`);
+        throw new Error(`#${currentRun.id} state already about to be ${this.timeouts[id].wantedState ? 'true' : 'false'}`);
       }
     }
 
+    // if there are no waiting delay, either because we canceled it or because there were none, check if current state already is wanted state
+    if (timeout?.state === wantedState) {
+      if (wantedState) {
+        // throwing errors in standard flows causes the flow to continue to the next or-field. so set currentRun to done to cause any delay cards there to abort as well.
+        currentRun.timestamp = Date.now();
+        currentRun.done = true;
+      }
+      this.logAs('debug', `[${id}] [${currentRun.id}] State already ${timeout.state === undefined ? 'undefined' : timeout.state ? 'true' : 'false'}`);
+      throw new Error(`#${currentRun.id} state already ${timeout.state === undefined ? 'undefined' : timeout.state ? 'true' : 'false'}`);
+    }
+
+    // a cancel that doesn't cancel anything unsets state and returns false
     if (wantedState === undefined) {
-      this.log(`[${id}] [${currentRun.id}] Unset state`);
+      this.logAs('info', `[${id}] [${currentRun.id}] Unset state`);
       this.timeouts[id] = {
         ...this.timeouts[id],
         state: undefined
@@ -187,8 +208,9 @@ class WaitAndSwitchApp extends Homey.App {
       return false;
     }
 
+    // immediate resolve
     if(seconds === 0) {
-      this.log(`[${id}] [${currentRun.id}] Immediately resolve ${wantedState}`);
+      this.logAs('info', `[${id}] [${currentRun.id}] Immediately resolve ${wantedState ? 'true' : 'false'}`);
       this.timeouts[id] = {
         ...this.timeouts[id],
         state: wantedState
@@ -197,10 +219,11 @@ class WaitAndSwitchApp extends Homey.App {
       return wantedState;
     }
 
-    this.log(`[${id}] [${currentRun.id}] Delaying resolve ${wantedState} for ${seconds} seconds`);
+    // delayed resolve
+    this.logAs('info', `[${id}] [${currentRun.id}] Delaying resolve ${wantedState} for ${seconds} seconds`);
     const timeoutRef = setTimeout(() => {
       const { resolve, wantedState: state } = this.timeouts[id];
-      this.log(`[${id}] [${currentRun!.id}] Resolving ${state}`);
+      this.logAs('info', `[${id}] [${currentRun!.id}] Resolving ${state}`);
       this.timeouts[id] = {
         ...this.timeouts[id],
         state,
