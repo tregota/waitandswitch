@@ -1,6 +1,6 @@
 {
   "title": {
-    "en": "Cancel"
+    "en": "Cancel for advanced flows"
   },
   "titleFormatted": {
     "en": "Cancel[[id]]"
@@ -17,6 +17,15 @@
       "name": "id",
       "placeholder": {
         "en": "Enter existing delay ID"
+      }
+    }
+  ],
+  "tokens": [
+    {
+      "type": "boolean",
+      "name": "delaycanceled",
+      "title": {
+        "en": "Canceled"
       }
     }
   ]

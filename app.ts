@@ -1,6 +1,6 @@
 import Homey from 'homey';
 
-let LOGLEVEL = 'info'; //'debug';
+const DEBUG = false;
 const RUN_MATCH_THRESHOLD = 100;
 
 type Run = {
@@ -8,7 +8,8 @@ type Run = {
   timestamp: number,
   removeafter: number,
   flowState: string,
-  done: boolean
+  skipOvers: number,
+  isAdvanced: boolean // wether or not the flow was started by a card only available in advanced flows
 }
 
 type Timeout = {
@@ -36,7 +37,7 @@ class WaitAndSwitchApp extends Homey.App {
   stateChangeTrigger: Homey.FlowCardTrigger | undefined;
 
   logAs(logLevel: 'info' | 'debug', logText: string) {
-    if (LOGLEVEL === 'debug' || logLevel === 'info') {
+    if (DEBUG || logLevel === 'info') {
       this.log(`[${logLevel}] ${logText}`);
     }
   }
@@ -46,11 +47,12 @@ class WaitAndSwitchApp extends Homey.App {
    */
   async onInit() {
     const delayCard: Homey.FlowCardCondition = this.homey.flow.getConditionCard('waitandswitch-delay');
-    const advancedDelayCard: Homey.FlowCardCondition = this.homey.flow.getConditionCard('waitandswitch-advanceddelay');
     const actionDelayCard: Homey.FlowCardAction = this.homey.flow.getActionCard('waitandswitch-advanceddelay');
 
+    // condition cards
+
     delayCard.registerRunListener(({ seconds, id: { name }}, flowData) => this.conditionRunListener(name, flowData, true, seconds));
-    delayCard.getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard, actionDelayCard]));
+    delayCard.getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, actionDelayCard]));
     delayCard.on('update', () => {
       this.lastID_Query = undefined;
       this.lastID_Random = undefined;
@@ -58,21 +60,17 @@ class WaitAndSwitchApp extends Homey.App {
 
     this.homey.flow.getConditionCard('waitandswitch-ordelay')
       .registerRunListener(({ seconds, id: { name } }, flowState) => this.conditionRunListener(name, flowState, false, seconds))
-      .getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard, actionDelayCard]));
+      .getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, actionDelayCard]));
 
     this.homey.flow.getConditionCard('waitandswitch-orcancel')
       .registerRunListener(({ id: { name } }, flowState) => this.conditionRunListener(name, flowState))
-      .getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard, actionDelayCard], false));
+      .getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, actionDelayCard], false));
 
-    advancedDelayCard.registerRunListener(({ yesno, seconds, id: { name } }, flowState) => this.conditionRunListener(name, flowState, yesno, seconds));
-    advancedDelayCard.getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard, actionDelayCard]));
-    advancedDelayCard.on('update', () => {
-      this.lastID_Query = undefined;
-      this.lastID_Random = undefined;
-    });
+
+    // action cards
 
     actionDelayCard.registerRunListener(({ yesno, seconds, id: { name } }, flowState) => this.conditionRunListener(name, flowState, yesno, seconds, true));
-    actionDelayCard.getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard, actionDelayCard]));
+    actionDelayCard.getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, actionDelayCard]));
     actionDelayCard.on('update', () => {
       this.lastID_Query = undefined;
       this.lastID_Random = undefined;
@@ -80,32 +78,35 @@ class WaitAndSwitchApp extends Homey.App {
 
     this.homey.flow.getActionCard('waitandswitch-cancel')
       .registerRunListener(({ id: { name } }, flowState) => this.conditionRunListener(name, flowState, undefined, 0, true))
-      .getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard, actionDelayCard], false));
+      .getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, actionDelayCard], false));
 
+    // trigger cards
 
     this.stateChangeTrigger = this.homey.flow.getTriggerCard('waitandswitch-statechange');
     this.stateChangeTrigger.registerRunListener((args, state) => args.id?.name === state.id);
-    this.stateChangeTrigger.getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard, actionDelayCard], false));
+    this.stateChangeTrigger.getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, actionDelayCard], false));
 
     this.delayStartTrigger = this.homey.flow.getTriggerCard('waitandswitch-delaystart');
     this.delayStartTrigger.registerRunListener((args, state) => args.id?.name === state.id);
-    this.delayStartTrigger.getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard, actionDelayCard], false));
+    this.delayStartTrigger.getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, actionDelayCard], false));
 
     this.log('Wait and Switch has been initialized');
   }
 
   /**
-   * When a 'Delay false/cancel' card cancels a previous waiting 'Delay true' card, in a standard flow, that previous flow will end up at its 'Or' card too. 
-   *   both will however be happy with how things are and abort.
+   * In a standard flow, when a 'Delay false/cancel' card cancels a previous waiting 'Delay true' card, that previous flow will end up at its 'Or' card too. 
+   *   Both will however be happy with how things are and abort.
    * When a 'Delay true' card cancels a 'Delay false' card it can directly abort it since a standard flow shouldn't have more conditions.
-   * But when a 'Delay true' card is happy with the current state and wants to abort, it will have to set currentRun.done to true
+   * But when a 'Delay true' card is happy with the current state and wants to abort, it will have to increase skipOvers
    *   since a following 'Delay false' card otherwise would have tried to change the current state
+   * To try and prevent this hack from breaking advanced flows we try and match flow runs using flow state which often does the trick but depends on the card triggering the flow,
+   *   for when it doesn't we have a time threshold at 100ms. Hopefully no flow triggers more often than that without having a flow state that varies.
    * @param {number} seconds 
    * @param {string} id 
    * @param {boolean} wantedState 
    * @returns 
    */
-   async conditionRunListener(id: string, flowState: any, wantedState?: boolean, seconds: number = 0, action = false) {
+   async conditionRunListener(id: string, flowState: any, wantedState?: boolean, seconds: number = 0, advancedFlow = false) {
     const timestamp = Date.now();
     const flowStateJson = JSON.stringify(flowState);
     this.logAs('debug', `[${id}] Run with state ${flowStateJson} wants ${wantedState === undefined ? 'undefined' : wantedState ? 'true' : 'false'}`);
@@ -133,7 +134,8 @@ class WaitAndSwitchApp extends Homey.App {
         timestamp,
         removeafter: timestamp + (seconds + 1) * 1000,
         flowState: flowStateJson,
-        done: false
+        skipOvers: 0,
+        isAdvanced: advancedFlow
       }
       if (!timeout) {
         this.timeouts[id] = {
@@ -148,8 +150,9 @@ class WaitAndSwitchApp extends Homey.App {
     }
     else {
       this.logAs('debug', `[${id}] [${currentRun.id}] Found matching run with ${timestamp - currentRun.timestamp}ms diff, threshold: ${RUN_MATCH_THRESHOLD}ms`);
-      if (!action && currentRun.done) {
+      if (!advancedFlow && wantedState !== true && currentRun.skipOvers > 0) {
         // and abort
+        currentRun.skipOvers--;
         this.logAs('debug', `[${id}] [${currentRun.id}] Run is done`);
         throw new Error(`#${currentRun.id} is already done`);
       }
@@ -163,24 +166,29 @@ class WaitAndSwitchApp extends Homey.App {
         this.cancelTimeout(id);
 
         // and reject it, but make sure when wanted state was true to set its run to done to true for the run. so that, in a standard flow, any following delay false cards doesn't trigger.
-        if (timeout.wantedState && timeout.timeoutRun) {
+        if (timeout.wantedState && timeout.timeoutRun && !timeout.timeoutRun.isAdvanced) {
           timeout.timeoutRun.timestamp = Date.now();
-          timeout.timeoutRun.done = true;
+          timeout.timeoutRun.skipOvers++;
         }
         timeout.reject && timeout.reject(`#${timeout.timeoutRun?.id} interrupted by #${currentRun.id}`);
         this.logAs('info', `[${id}] [${currentRun.id}] State change by [${timeout.timeoutRun?.id}] interrupted`);
 
         // a successful cancel always aborts
         if(wantedState === undefined) {
+          if (advancedFlow) {
+            return {
+              delaycanceled: true
+            };
+          }
           // when aborted we need to set done to true for the run. so that, in a standard flow, any following delay false cards doesn't trigger.
           throw new Error(`#${currentRun.id} canceled #${timeout.timeoutRun?.id}`);
         }
       }
       else {
-        if (wantedState) {
-          // throwing errors in standard flows causes the flow to continue to the next or-field. so set currentRun to done to cause any delay cards there to abort as well.
+        if (wantedState && !advancedFlow) {
+          // throwing errors in standard flows causes the flow to continue to the next or-field. so increase skipOvers to cause any delay cards there to abort as well.
           currentRun.timestamp = Date.now();
-          currentRun.done = true;
+          currentRun.skipOvers++;
         }
         this.logAs('debug', `[${id}] [${currentRun.id}] State already about to be ${this.timeouts[id].wantedState ? 'true' : 'false'}`);
         throw new Error(`#${currentRun.id} state already about to be ${this.timeouts[id].wantedState ? 'true' : 'false'}`);
@@ -190,12 +198,12 @@ class WaitAndSwitchApp extends Homey.App {
     // if there are no waiting delay, either because we canceled it or because there were none, check if current state already is wanted state
     if (timeout?.state === wantedState) {
       if (wantedState) {
-        // throwing errors in standard flows causes the flow to continue to the next or-field. so set currentRun to done to cause any delay cards there to abort as well.
+        // throwing errors in standard flows causes the flow to continue to the next or-field. so increase skipOvers to cause any delay cards there to abort as well.
         currentRun.timestamp = Date.now();
-        currentRun.done = true;
+        currentRun.skipOvers++;
       }
-      this.logAs('debug', `[${id}] [${currentRun.id}] State already ${timeout.state === undefined ? 'undefined' : timeout.state ? 'true' : 'false'}`);
-      throw new Error(`#${currentRun.id} state already ${timeout.state === undefined ? 'undefined' : timeout.state ? 'true' : 'false'}`);
+      this.logAs('debug', `[${id}] [${currentRun.id}] State already ${timeout?.state === undefined ? 'undefined' : timeout?.state ? 'true' : 'false'}`);
+      throw new Error(`#${currentRun.id} state already ${timeout?.state === undefined ? 'undefined' : timeout?.state ? 'true' : 'false'}`);
     }
 
     // a cancel that doesn't cancel anything unsets state and returns false
@@ -205,6 +213,11 @@ class WaitAndSwitchApp extends Homey.App {
         ...this.timeouts[id],
         state: undefined
       };
+      if (advancedFlow) {
+        return {
+          delaycanceled: false
+        }; 
+      }
       return false;
     }
 
@@ -215,7 +228,12 @@ class WaitAndSwitchApp extends Homey.App {
         ...this.timeouts[id],
         state: wantedState
       };
-      this.stateChangeTrigger!.trigger({ state: wantedState }, { id }); 
+      this.stateChangeTrigger!.trigger({ state: wantedState }, { ...flowState, id, timestamp: Date.now() }); 
+      if (advancedFlow) {
+        return {
+          delaystate: wantedState
+        };
+      }
       return wantedState;
     }
 
@@ -233,14 +251,24 @@ class WaitAndSwitchApp extends Homey.App {
         wantedState: undefined,
         timeoutRun: undefined
       }
-      resolve && resolve(state);
+      if (resolve) {
+        if (advancedFlow) {
+          resolve({
+            delaystate: wantedState
+          });
+        }
+        else {
+          resolve(wantedState);
+        }
+      }
 
-      this.stateChangeTrigger!.trigger({ state }, { id });
+      this.stateChangeTrigger!.trigger({ state }, { ...flowState, id, timestamp: Date.now() });
     }, seconds * 1000);
 
-    this.delayStartTrigger!.trigger({ seconds }, { id });
+    this.delayStartTrigger!.trigger({ seconds }, { ...flowState, id, timestamp: Date.now() });
 
     return new Promise((resolve, reject) => {
+      currentRun!.isAdvanced = advancedFlow;
       this.timeouts[id] = {
         ...this.timeouts[id],
         timeoutRun: currentRun,

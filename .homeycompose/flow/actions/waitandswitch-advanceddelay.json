@@ -37,5 +37,14 @@
         "en": "Enter delay ID"
       }
     }
+  ],
+  "tokens": [
+    {
+      "type": "boolean",
+      "name": "delaystate",
+      "title": {
+        "en": "State"
+      }
+    }
   ]
 }

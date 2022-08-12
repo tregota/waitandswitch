@@ -4,7 +4,8 @@ This can be used to turn something both on and off with a delay.
 
 ![logo](https://raw.githubusercontent.com/tregota/waitandswitch/main/assets/images/large.png)
 
-The only way to use this app in standard flows is to place a "Delay true" condition card after all other conditions and a "Delay false" card (or a "Cancel" card) alone below the "or" line. Advanced flows aren't as limited.
+The way to use this app in standard flows is to place a "Delay true" condition card after all other conditions and a "Delay false" card (or a "Cancel" card) alone below the "or" line.
+In advanced flows, use the Then-cards for the best result.
 
 Maximum delay before Homey kills the flow is 89 seconds. Longer delays will however still continue internally and will change the state, it will just not be able to trigger any following cards. The 'State changed' trigger card can be used to work around this.
 
