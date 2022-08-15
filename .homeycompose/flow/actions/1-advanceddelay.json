@@ -6,7 +6,7 @@
     "en": "Delay[[yesno]][[seconds]]sec,[[id]]"
   },
   "hint": {
-    "en": "Delays Yes/No unless interrupted by a cancel card with the same ID. Only works in advanced flows."
+    "en": "Delays Yes/No unless interrupted by an opposing card with the same ID."
   },
   "args": [
     {
@@ -46,5 +46,6 @@
         "en": "State"
       }
     }
-  ]
+  ],
+  "id": "waitandswitch-advanceddelay"
 }

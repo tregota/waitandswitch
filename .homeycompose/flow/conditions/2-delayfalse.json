@@ -1,12 +1,12 @@
 {
     "title": {
-      "en": "Delay false"
+      "en": "Or delay false"
     },
     "titleFormatted": {
-      "en": "Delay!{{ |not }}false[[seconds]]sec,[[id]]"
+      "en": "Or delay!{{ |not }}false[[seconds]]sec,[[id]]"
     },
     "hint": {
-      "en": "Delays false (if state is true) unless interrupted by an opposing card with the same ID."
+      "en": "For standard flows. Must be placed alone below the \"or\" line. Cancels \"Delay true\" or delays false if state is true."
     },
     "args": [
       {
@@ -32,5 +32,6 @@
           "en": "Enter delay ID"
         }
       }
-    ]
+    ],
+    "id": "waitandswitch-ordelay"
   }

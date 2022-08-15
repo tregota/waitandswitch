@@ -52,6 +52,13 @@
         ],
         "tokens": [
           {
+            "type": "boolean",
+            "name": "wantedState",
+            "title": {
+              "en": "State"
+            }
+          },
+          {
             "type": "number",
             "name": "seconds",
             "title": {
@@ -101,7 +108,7 @@
           "en": "Delay!{{ |not }}true[[seconds]]sec,[[id]]"
         },
         "hint": {
-          "en": "Delays true (if state is false) unless interrupted by an opposing card with the same ID."
+          "en": "For standard flows. Must be placed after all other conditions. With the exception that it must also be followed by an \"Or\" card with same ID below the \"or\" line. Don't invert."
         },
         "args": [
           {
@@ -132,37 +139,13 @@
       },
       {
         "title": {
-          "en": "!{{Cancel|Inverted cancel}}"
+          "en": "Or delay false"
         },
         "titleFormatted": {
-          "en": "!{{Cancel|Inverted cancel}}[[id]]"
+          "en": "Or delay!{{ |not }}false[[seconds]]sec,[[id]]"
         },
         "hint": {
-          "en": "Cancels existing delay with the same ID or unsets state and returns false."
-        },
-        "args": [
-          {
-            "title": {
-              "en": "ID"
-            },
-            "type": "autocomplete",
-            "name": "id",
-            "placeholder": {
-              "en": "Enter existing delay ID"
-            }
-          }
-        ],
-        "id": "waitandswitch-orcancel"
-      },
-      {
-        "title": {
-          "en": "Delay false"
-        },
-        "titleFormatted": {
-          "en": "Delay!{{ |not }}false[[seconds]]sec,[[id]]"
-        },
-        "hint": {
-          "en": "Delays false (if state is true) unless interrupted by an opposing card with the same ID."
+          "en": "For standard flows. Must be placed alone below the \"or\" line. Cancels \"Delay true\" or delays false if state is true."
         },
         "args": [
           {
@@ -190,6 +173,30 @@
           }
         ],
         "id": "waitandswitch-ordelay"
+      },
+      {
+        "title": {
+          "en": "Or !{{cancel|inverted cancel}}"
+        },
+        "titleFormatted": {
+          "en": "Or !{{cancel|inverted cancel}}[[id]]"
+        },
+        "hint": {
+          "en": "For standard flows. Must be placed alone below the \"or\" line. Cancels \"Delay true\" or returns false if state is true."
+        },
+        "args": [
+          {
+            "title": {
+              "en": "ID"
+            },
+            "type": "autocomplete",
+            "name": "id",
+            "placeholder": {
+              "en": "Enter existing delay ID"
+            }
+          }
+        ],
+        "id": "waitandswitch-orcancel"
       }
     ],
     "actions": [
@@ -201,7 +208,7 @@
           "en": "Delay[[yesno]][[seconds]]sec,[[id]]"
         },
         "hint": {
-          "en": "Delays Yes/No unless interrupted by a cancel card with the same ID. Only works in advanced flows."
+          "en": "Delays Yes/No unless interrupted by an opposing card with the same ID."
         },
         "args": [
           {
@@ -275,7 +282,7 @@
             }
           }
         ],
-        "id": "waitandswitch-cancel"
+        "id": "waitandswitch-advancedcancel"
       }
     ]
   }

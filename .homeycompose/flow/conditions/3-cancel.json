@@ -1,12 +1,12 @@
 {
     "title": {
-      "en": "!{{Cancel|Inverted cancel}}"
+      "en": "Or !{{cancel|inverted cancel}}"
     },
     "titleFormatted": {
-      "en": "!{{Cancel|Inverted cancel}}[[id]]"
+      "en": "Or !{{cancel|inverted cancel}}[[id]]"
     },
     "hint": {
-      "en": "Cancels existing delay with the same ID or unsets state and returns false."
+      "en": "For standard flows. Must be placed alone below the \"or\" line. Cancels \"Delay true\" or returns false if state is true."
     },
     "args": [
       {
@@ -19,5 +19,6 @@
           "en": "Enter existing delay ID"
         }
       }
-    ]
+    ],
+    "id": "waitandswitch-orcancel"
   }

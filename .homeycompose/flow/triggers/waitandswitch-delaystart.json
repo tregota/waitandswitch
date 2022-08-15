@@ -19,6 +19,13 @@
   ],
   "tokens": [
     {
+      "type": "boolean",
+      "name": "wantedState",
+      "title": {
+        "en": "State"
+      }
+    },
+    {
       "type": "number",
       "name": "seconds",
       "title": {

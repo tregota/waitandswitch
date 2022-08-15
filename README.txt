@@ -1,8 +1,8 @@
 Place these delay cards after a set of conditions to make sure they stay true before performing any action.
 This can be used to turn something both on and off with a delay.
 
-In standard flows, place a "Delay true" condition card after all other conditions and a "Delay false" card (or a "Cancel" card) alone below the "or" line.
-In advanced flows you should use the Then-cards for the best result.
+In standard flows, place a "Delay true" condition card after all other conditions and a "Or delay false" card (or a "Or cancel" card) alone below the "or" line.
+In advanced flows you should use the Then-cards, but there are not limitation for how you use them.
 
 Example:
 If the TV power usage changes and is greater than 25W for 5 seconds then turn Subwoofer on. Else turn Subwoofer off if less than 25W for 5 seconds. This will turn on the Subwoofer if the TV power usage remain high and also turn it off if it remains low. Not reacting to power spikes.
