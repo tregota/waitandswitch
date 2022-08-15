@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "se.tregota.waitandswitch",
-  "version": "0.9.3",
+  "version": "0.10.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -108,7 +108,7 @@
           "en": "Delay!{{ |not }}true[[seconds]]sec,[[id]]"
         },
         "hint": {
-          "en": "For standard flows. Must be placed after all other conditions. With the exception that it must also be followed by an \"Or\" card with same ID below the \"or\" line. Don't invert."
+          "en": "For standard flows. Should be placed after all other conditions. With the exception that it should also be followed by an \"Or\" card with same ID below the \"or\" line. Don't invert."
         },
         "args": [
           {
@@ -145,7 +145,7 @@
           "en": "Or delay!{{ |not }}false[[seconds]]sec,[[id]]"
         },
         "hint": {
-          "en": "For standard flows. Must be placed alone below the \"or\" line. Cancels \"Delay true\" or delays false if state is true."
+          "en": "For standard flows. Should be placed alone below the \"or\" line. Cancels \"Delay true\" or delays false if state is true."
         },
         "args": [
           {
@@ -182,7 +182,7 @@
           "en": "Or !{{cancel|inverted cancel}}[[id]]"
         },
         "hint": {
-          "en": "For standard flows. Must be placed alone below the \"or\" line. Cancels \"Delay true\" or returns false if state is true."
+          "en": "For standard flows. Should be placed alone below the \"or\" line. Cancels \"Delay true\" or returns false if state is true."
         },
         "args": [
           {

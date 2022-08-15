@@ -6,7 +6,7 @@
       "en": "Or delay!{{ |not }}false[[seconds]]sec,[[id]]"
     },
     "hint": {
-      "en": "For standard flows. Must be placed alone below the \"or\" line. Cancels \"Delay true\" or delays false if state is true."
+      "en": "For standard flows. Should be placed alone below the \"or\" line. Cancels \"Delay true\" or delays false if state is true."
     },
     "args": [
       {
