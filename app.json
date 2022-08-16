@@ -197,6 +197,27 @@
           }
         ],
         "id": "waitandswitch-orcancel"
+      },
+      {
+        "title": {
+          "en": "Is delayed"
+        },
+        "titleFormatted": {
+          "en": "[[id]]is delayed"
+        },
+        "args": [
+          {
+            "title": {
+              "en": "ID"
+            },
+            "type": "autocomplete",
+            "name": "id",
+            "placeholder": {
+              "en": "Enter existing delay ID"
+            }
+          }
+        ],
+        "id": "waitandswitch-isdelayed"
       }
     ],
     "actions": [

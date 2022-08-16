@@ -65,6 +65,9 @@ class WaitAndSwitchApp extends Homey.App {
       .registerRunListener(({ id: { name } }, flowState) => this.conditionRunListener(name, flowState))
       .getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard], false));
 
+    this.homey.flow.getConditionCard('waitandswitch-isdelayed')
+      .registerRunListener(({ id: { name } }) => !!this.timeouts[name]?.timeoutRef)
+      .getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard], false));
 
     // action cards
 
