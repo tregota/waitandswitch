@@ -1,6 +1,6 @@
 {
   "title": {
-    "en": "Cancel for advanced flows"
+    "en": "Cancel"
   },
   "titleFormatted": {
     "en": "Cancel[[id]]"
@@ -20,14 +20,5 @@
       }
     }
   ],
-  "tokens": [
-    {
-      "type": "boolean",
-      "name": "delaycanceled",
-      "title": {
-        "en": "Canceled"
-      }
-    }
-  ],
-  "id": "waitandswitch-advancedcancel"
+  "id": "waitandswitch-cancel"
 }

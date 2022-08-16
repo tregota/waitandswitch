@@ -8,7 +8,7 @@ type Run = {
   removeafter: number,
   flowState: string,
   skipOvers: number,
-  isAdvanced: boolean // wether or not the flow was started by a card only available in advanced flows
+  isAction: boolean // wether or not the flow was started by an action card and thus doesn't have to use the condition card work around
 }
 
 type Timeout = {
@@ -75,7 +75,7 @@ class WaitAndSwitchApp extends Homey.App {
       this.lastID_Random = undefined;
     });
 
-    this.homey.flow.getActionCard('waitandswitch-advancedcancel')
+    this.homey.flow.getActionCard('waitandswitch-cancel')
       .registerRunListener(({ id: { name } }, flowState) => this.conditionRunListener(name, flowState, undefined, 0, true))
       .getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard], false));
 
@@ -105,7 +105,7 @@ class WaitAndSwitchApp extends Homey.App {
    * @param {boolean} wantedState 
    * @returns 
    */
-   async conditionRunListener(id: string, flowState: any, wantedState?: boolean, seconds: number = 0, advancedFlow = false) {
+   async conditionRunListener(id: string, flowState: any, wantedState?: boolean, seconds: number = 0, isActionCard = false) {
     const timestamp = Date.now();
     const flowStateJson = JSON.stringify(flowState);
     this.logAs('debug', `[${id}] Run with state ${flowStateJson} wants ${wantedState === undefined ? 'undefined' : wantedState ? 'true' : 'false'}`);
@@ -125,7 +125,7 @@ class WaitAndSwitchApp extends Homey.App {
         removeafter: timestamp + RUN_MATCH_THRESHOLD,
         flowState: flowStateJson,
         skipOvers: 0,
-        isAdvanced: advancedFlow
+        isAction: isActionCard
       }
       if (!timeout) {
         this.timeouts[id] = {
@@ -138,7 +138,7 @@ class WaitAndSwitchApp extends Homey.App {
         timeout.lastRunId = currentRun.id > 9999 ? 0 : currentRun.id;
       }
     }
-    else if (!advancedFlow) {
+    else if (!isActionCard) {
       this.logAs('debug', `[${id}] [${currentRun.id}] Found matching run with ${(timestamp + RUN_MATCH_THRESHOLD) - currentRun.removeafter}ms diff, threshold: ${RUN_MATCH_THRESHOLD}ms`);
       if (wantedState === true) {
         // another wantedStateTrue is another flow run with the same state within RUN_MATCH_THRESHOLD. we cannot differentiate this from the first run so prolong its removeafter threshold so that all following or-cards are matched
@@ -157,7 +157,7 @@ class WaitAndSwitchApp extends Homey.App {
       // if there is an active timeout and it is doing something we don't want
       if (timeout.wantedState !== wantedState) {
         // if we are about to cancel a running timeout, we need to increase it's skipovers and prolong its remove after threshold in standard flows so it's not removed and that any following cards are handled correctly
-        if (timeout.wantedState && timeout.timeoutRun && !timeout.timeoutRun.isAdvanced) {
+        if (timeout.wantedState && timeout.timeoutRun && !timeout.timeoutRun.isAction) {
           timeout.timeoutRun.removeafter = Date.now() + RUN_MATCH_THRESHOLD;
           timeout.timeoutRun.skipOvers++;
         }
@@ -171,17 +171,15 @@ class WaitAndSwitchApp extends Homey.App {
 
         // a successful cancel always aborts
         if(wantedState === undefined) {
-          if (advancedFlow) {
-            return {
-              delaycanceled: true
-            };
+          if (isActionCard) {
+            return false;
           }
           // when aborted we need to set done to true for the run. so that, in a standard flow, any following delay false cards doesn't trigger.
           throw new Error(`#${currentRun.id} canceled #${timeout.timeoutRun?.id}`);
         }
       }
       else {
-        if (wantedState && !advancedFlow) {
+        if (wantedState && !isActionCard) {
           // throwing errors in standard flows causes the flow to continue to the next or-field. so increase skipOvers to cause any delay cards there to abort as well.
           currentRun.removeafter = Date.now() + RUN_MATCH_THRESHOLD;
           currentRun.skipOvers++;
@@ -192,7 +190,7 @@ class WaitAndSwitchApp extends Homey.App {
     }
 
     // if there are no waiting delay, either because we canceled it or because there were none, check if current state already is wanted state
-    if (timeout?.state === wantedState && (!advancedFlow || wantedState !== undefined)) {
+    if (timeout?.state === wantedState && (!isActionCard || wantedState !== undefined)) {
       if (wantedState) {
         // throwing errors in standard flows causes the flow to continue to the next or-field. so increase skipOvers to cause any delay cards there to abort as well.
         currentRun.removeafter = Date.now() + RUN_MATCH_THRESHOLD;
@@ -209,11 +207,6 @@ class WaitAndSwitchApp extends Homey.App {
         ...this.timeouts[id],
         state: undefined
       };
-      if (advancedFlow) {
-        return {
-          delaycanceled: false
-        }; 
-      }
       return false;
     }
 
@@ -225,7 +218,7 @@ class WaitAndSwitchApp extends Homey.App {
         state: wantedState
       };
       this.stateChangeTrigger!.trigger({ state: wantedState }, { ...flowState, id, timestamp: Date.now() }); 
-      if (advancedFlow) {
+      if (isActionCard) {
         return {
           delaystate: wantedState
         };
@@ -248,7 +241,7 @@ class WaitAndSwitchApp extends Homey.App {
         timeoutRun: undefined
       }
       if (resolve) {
-        if (advancedFlow) {
+        if (isActionCard) {
           resolve({
             delaystate: wantedState
           });
@@ -264,7 +257,7 @@ class WaitAndSwitchApp extends Homey.App {
     this.delayStartTrigger!.trigger({ wantedState, seconds }, { ...flowState, id, timestamp: Date.now() });
 
     return new Promise((resolve, reject) => {
-      currentRun!.isAdvanced = advancedFlow;
+      currentRun!.isAction = isActionCard;
       this.timeouts[id] = {
         ...this.timeouts[id],
         timeoutRun: currentRun,

@@ -6,7 +6,7 @@
       "en": "Delay!{{ |not }}true[[seconds]]sec,[[id]]"
     },
     "hint": {
-      "en": "For standard flows. Should be placed after all other conditions. With the exception that it should also be followed by an \"Or\" card with same ID below the \"or\" line. Don't invert."
+      "en": "For standard flows. Should be placed after all other conditions. With the exception that it should also be followed by an \"Or\" card with same ID below the \"or\" line."
     },
     "args": [
       {

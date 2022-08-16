@@ -1,8 +1,8 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "se.tregota.waitandswitch",
-  "version": "0.10.0",
-  "compatibility": ">=5.0.0",
+  "version": "0.10.1",
+  "compatibility": ">=8.0.0",
   "sdk": 3,
   "platforms": [
     "local"
@@ -108,7 +108,7 @@
           "en": "Delay!{{ |not }}true[[seconds]]sec,[[id]]"
         },
         "hint": {
-          "en": "For standard flows. Should be placed after all other conditions. With the exception that it should also be followed by an \"Or\" card with same ID below the \"or\" line. Don't invert."
+          "en": "For standard flows. Should be placed after all other conditions. With the exception that it should also be followed by an \"Or\" card with same ID below the \"or\" line."
         },
         "args": [
           {
@@ -202,7 +202,7 @@
     "actions": [
       {
         "title": {
-          "en": "Delay for advanced flows"
+          "en": "Delay Yes/No"
         },
         "titleFormatted": {
           "en": "Delay[[yesno]][[seconds]]sec,[[id]]"
@@ -253,7 +253,7 @@
       },
       {
         "title": {
-          "en": "Cancel for advanced flows"
+          "en": "Cancel"
         },
         "titleFormatted": {
           "en": "Cancel[[id]]"
@@ -273,16 +273,7 @@
             }
           }
         ],
-        "tokens": [
-          {
-            "type": "boolean",
-            "name": "delaycanceled",
-            "title": {
-              "en": "Canceled"
-            }
-          }
-        ],
-        "id": "waitandswitch-advancedcancel"
+        "id": "waitandswitch-cancel"
       }
     ]
   }

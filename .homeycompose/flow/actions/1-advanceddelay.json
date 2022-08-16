@@ -1,6 +1,6 @@
 {
   "title": {
-    "en": "Delay for advanced flows"
+    "en": "Delay Yes/No"
   },
   "titleFormatted": {
     "en": "Delay[[yesno]][[seconds]]sec,[[id]]"
