@@ -1,6 +1,6 @@
 {
   "id": "se.tregota.waitandswitch",
-  "version": "0.10.1",
+  "version": "0.10.2",
   "compatibility": ">=8.0.0",
   "sdk": 3,
   "platforms": [
