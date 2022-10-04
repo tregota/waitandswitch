@@ -22,8 +22,7 @@
     "large": "/assets/images/large.png"
   },
   "author": {
-    "name": "Henrik Berg",
-    "email": "dev@tregota.se"
+    "name": "Henrik Berg"
   },
   "bugs": {
     "url": "https://github.com/tregota/waitandswitch/issues"

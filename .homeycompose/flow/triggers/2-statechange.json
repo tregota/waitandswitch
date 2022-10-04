@@ -1,11 +1,19 @@
 {
   "title": {
-    "en": "State changed"
+    "en": "State switched"
   },
   "titleFormatted": {
-    "en": "[[id]]state changed"
+    "en": "[[id]]switched to[[yesno]]"
   },
   "args": [
+    {
+      "title": {
+        "en": "Yes/No"
+      },
+      "type": "checkbox",
+      "name": "yesno",
+      "required": false
+    },
     {
       "title": {
         "en": "ID"

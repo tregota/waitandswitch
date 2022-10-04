@@ -85,7 +85,7 @@ class WaitAndSwitchApp extends Homey.App {
     // trigger cards
 
     this.stateChangeTrigger = this.homey.flow.getTriggerCard('waitandswitch-statechange');
-    this.stateChangeTrigger.registerRunListener((args, state) => args.id?.name === state.id);
+    this.stateChangeTrigger.registerRunListener((args, state) => args.id?.name === state.id && (args.yesno === undefined || args.yesno === state.newState) );
     this.stateChangeTrigger.getArgument('id').registerAutocompleteListener((query) => this.getConditionIds(query, [delayCard, advancedDelayCard], false));
 
     this.delayStartTrigger = this.homey.flow.getTriggerCard('waitandswitch-delaystart');
@@ -220,7 +220,7 @@ class WaitAndSwitchApp extends Homey.App {
         ...this.timeouts[id],
         state: wantedState
       };
-      this.stateChangeTrigger!.trigger({ state: wantedState }, { ...flowState, id, timestamp: Date.now() }); 
+      this.stateChangeTrigger!.trigger({ state: wantedState }, { ...flowState, id, newState: wantedState, timestamp: Date.now() }); 
       if (isActionCard) {
         return {
           delaystate: wantedState
@@ -254,7 +254,7 @@ class WaitAndSwitchApp extends Homey.App {
         }
       }
 
-      this.stateChangeTrigger!.trigger({ state }, { ...flowState, id, timestamp: Date.now() });
+      this.stateChangeTrigger!.trigger({ state }, { ...flowState, id, newState: state, timestamp: Date.now() });
     }, seconds * 1000);
 
     this.delayStartTrigger!.trigger({ wantedState, seconds }, { ...flowState, id, timestamp: Date.now() });
