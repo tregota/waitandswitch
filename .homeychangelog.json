@@ -10,5 +10,8 @@
   },
   "0.10.2": {
     "en": "Added 'Then'-cards that supports advanced flows. Plus a few extra cards and some internal changes that hopefully doesn't break anything for anyone."
+  },
+  "0.10.3": {
+    "en": "Better state change trigger"
   }
 }
